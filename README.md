@@ -15,7 +15,7 @@ This is a web application for exploring real estate properties, featuring an int
 
 ## Tech Stack
 
-- Next.js 14
+- Next.js 15
 - React
 - TypeScript
 - Tailwind CSS
@@ -33,7 +33,7 @@ This is a web application for exploring real estate properties, featuring an int
 ### 1. Clone the Repository
 
 ```bash
-git clone https://your-github-repo-url.git
+git clone https://github.com/alizahir23/real-estate-property-explorer.git
 cd real-estate-property-explorer
 ```
 
@@ -95,5 +95,3 @@ The geocoding process is currently limited to 50 properties due to Google Maps A
 - Consistent UI/UX across devices
 
 ## Deployment
-
-Can be deployed on platforms like Vercel, Netlify, or traditional cloud providers supporting Next.js applications.
