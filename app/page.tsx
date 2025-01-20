@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import Navbar from "./components/Navbar";
-
 import PropertyExplorer from "./components/property_explorer/PropertyExplorer";
 import SearchFilterBar from "./components/SearchFilterBar";
 
@@ -12,9 +11,11 @@ export const metadata: Metadata = {
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const query = (await searchParams).filters;
+  // Extract the query/filters from searchParams
+  const query = (await searchParams).filters as string | undefined;
+
   return (
     <>
       <Navbar />
