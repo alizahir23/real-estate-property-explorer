@@ -1,5 +1,5 @@
 "use client";
-import React, { Key, useEffect, useRef, useState } from "react";
+import React, { Key, useEffect, useRef } from "react";
 import {
   APIProvider,
   Map,
@@ -8,7 +8,6 @@ import {
   Pin,
 } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
-import type { Marker } from "@googlemaps/markerclusterer";
 import { Property } from "@/types/property";
 import PropertyPanel from "./PropertyPanel";
 
