@@ -1,6 +1,5 @@
 "use client";
 import React, { Key, useEffect, useRef, useState } from "react";
-import { createRoot } from "react-dom/client";
 import {
   APIProvider,
   Map,
@@ -145,21 +144,6 @@ const PoiMarkers = ({
     clusterer.current?.clearMarkers();
     clusterer.current?.addMarkers(Object.values(markers));
   }, [markers]);
-
-  const setMarkerRef = (marker: Marker | null, key: string) => {
-    if (marker && markers[key]) return;
-    if (!marker && !markers[key]) return;
-
-    setMarkers((prev) => {
-      if (marker) {
-        return { ...prev, [key]: marker };
-      } else {
-        const newMarkers = { ...prev };
-        delete newMarkers[key];
-        return newMarkers;
-      }
-    });
-  };
 
   const handleClick = (ev: google.maps.MapMouseEvent, poi: Poi) => {
     if (!map) return;

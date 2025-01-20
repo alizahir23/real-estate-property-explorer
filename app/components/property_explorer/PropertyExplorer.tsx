@@ -11,11 +11,7 @@ import PropertyListView from "./PropertyListView";
 import PropertyMapView from "./PropertyMapView";
 import propertyData from "../../../public/properties.json";
 import { Property } from "@/types/property";
-import {
-  faChevronDown,
-  faList,
-  faMap,
-} from "@fortawesome/free-solid-svg-icons";
+import { faList, faMap } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Edit } from "lucide-react";
 import PropertyManagementModal from "../PropertyManagementModal";

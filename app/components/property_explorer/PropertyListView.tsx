@@ -1,4 +1,4 @@
-import React, { forwardRef, Key } from "react";
+import React, { forwardRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsUpDown } from "@fortawesome/free-solid-svg-icons";
 import ListviewCard from "./ListviewCard";
@@ -115,5 +115,7 @@ const PropertyListView = forwardRef<
     );
   }
 );
+
+PropertyListView.displayName = "PropertyListView";
 
 export default PropertyListView;

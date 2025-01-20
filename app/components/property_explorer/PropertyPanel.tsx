@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef } from "react";
 import Image from "next/image";
 import { faHeart } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -42,5 +42,7 @@ const PropertyPanel = forwardRef<HTMLDivElement, { property: Property }>(
     );
   }
 );
+
+PropertyPanel.displayName = "PropertyPanel";
 
 export default PropertyPanel;
