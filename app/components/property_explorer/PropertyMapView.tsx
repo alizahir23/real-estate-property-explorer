@@ -13,14 +13,6 @@ import type { Marker } from "@googlemaps/markerclusterer";
 import { Property } from "@/types/property";
 import PropertyPanel from "./PropertyPanel";
 
-type LocationData = {
-  id: Key;
-  City: string;
-  Community: string;
-  Subcommunity: string;
-  Property: string;
-};
-
 type Poi = {
   key: Key;
   location: google.maps.LatLngLiteral;
@@ -29,16 +21,15 @@ type Poi = {
 
 const PropertyMapView = ({
   mappedLocations,
-  unmappedLocations,
   selectedProperty,
   onPropertySelect,
 }: {
   mappedLocations: Poi[];
-  unmappedLocations: LocationData[];
   selectedProperty: Property | null;
   onPropertySelect: (property: Property | null) => void;
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -60,7 +51,7 @@ const PropertyMapView = ({
   return (
     <div className="relative w-full h-[calc(100vh-138px)]">
       <APIProvider
-        apiKey={"AIzaSyCuKLKXrJxnrM24zucIuMx6VIcXzjWONM8"}
+        apiKey={apiKey ?? ""}
         onLoad={() => console.log("Maps API has loaded.")}
       >
         <Map

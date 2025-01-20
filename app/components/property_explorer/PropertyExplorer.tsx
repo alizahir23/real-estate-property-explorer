@@ -24,14 +24,6 @@ interface PropertyExplorerProps {
   query?: string;
 }
 
-type LocationData = {
-  id: Key;
-  City: string;
-  Community: string;
-  Subcommunity: string;
-  Property: string;
-};
-
 type Poi = {
   key: Key;
   location: google.maps.LatLngLiteral;
@@ -69,7 +61,7 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
           return true;
         }
 
-        // 3. General search (existing logic)
+        // 3. General search
         return (
           property.City.toLowerCase().includes(searchTerm) ||
           property.Community?.toLowerCase().includes(searchTerm) ||
@@ -78,12 +70,15 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
         );
       })
       .slice(0, 50);
+    //  Serving only 50 search results due to slow geocoding search results.
+    //  Can be optimised using pagination.
   }, [query, propertyData]);
 
   const { mappedLocations, unmappedLocations } = useGeocodeLocations(
     filteredProperties,
     setIsLoading
   );
+
   const handleMapPropertySelect = useCallback((property: Property | null) => {
     setSelectedProperty(property);
 
@@ -120,7 +115,6 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
         </div>
         <PropertyMapView
           mappedLocations={mappedLocations}
-          unmappedLocations={unmappedLocations}
           selectedProperty={selectedProperty}
           onPropertySelect={handleMapPropertySelect}
         />
@@ -131,7 +125,6 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
             <div>
               <PropertyMapView
                 mappedLocations={mappedLocations}
-                unmappedLocations={unmappedLocations}
                 selectedProperty={selectedProperty}
                 onPropertySelect={handleMapPropertySelect}
               />
@@ -183,24 +176,22 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
 };
 
 const useGeocodeLocations = (
-  locations: LocationData[],
+  locations: Property[],
   setIsLoading: {
     (value: React.SetStateAction<boolean>): void;
     (arg0: boolean): void;
   }
 ) => {
   console.log("useGeocodeLocations");
-
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const [mappedLocations, setMappedLocations] = useState<Poi[]>([]);
-  const [unmappedLocations, setUnmappedLocations] = useState<LocationData[]>(
-    []
-  );
+  const [unmappedLocations, setUnmappedLocations] = useState<Property[]>([]);
 
   useEffect(() => {
     setIsLoading(true);
     const geocodeLocations = async () => {
       const mappedResults: Poi[] = [];
-      const unmappedResults: LocationData[] = [];
+      const unmappedResults: Property[] = [];
 
       for (const location of locations) {
         const addressParts = [
@@ -217,7 +208,7 @@ const useGeocodeLocations = (
           const response = await fetch(
             `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
               address
-            )}&key=AIzaSyCuKLKXrJxnrM24zucIuMx6VIcXzjWONM8`
+            )}&key=${apiKey}`
           );
 
           const data = await response.json();

@@ -16,7 +16,7 @@ const PropertyListView = forwardRef<
   HTMLDivElement,
   {
     mappedProperties: Property[];
-    unmappedProperties: LocationData[];
+    unmappedProperties: Property[];
     selectedProperty: Property | null;
     onPropertySelect: (property: Property) => void;
     isLoading?: boolean;

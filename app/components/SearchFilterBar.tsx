@@ -63,7 +63,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
   };
 
   return (
-    <div className="w-full bg-[#f7f7f7] border-b border-gray-200 fixed top-[64px] z-50">
+    <div className="w-full bg-[#f7f7f7] border-b border-gray-200 fixed top-[64px] z-[49]">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center p-4 gap-4 md:gap-8 md:justify-between">
           <Form

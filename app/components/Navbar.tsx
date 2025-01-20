@@ -82,7 +82,9 @@ const Navbar = () => {
 
         {/* Mobile menu */}
         <div
-          className={`${isOpen ? "block" : "hidden"} md:hidden py-2 space-y-1`}
+          className={`${
+            isOpen ? "block" : "hidden"
+          } md:hidden py-2 space-y-1 z-[60]`}
         >
           <Link
             href=""

@@ -1,20 +1,14 @@
+import { Property } from "@/types/property";
 import { Key } from "react";
 
-type LocationData = {
-  id: Key;
-  City: string;
-  Community: string;
-  Subcommunity: string;
-  Property: string;
-};
-
-const geocodeLocation = async (location: LocationData) => {
+const geocodeLocation = async (location: Property) => {
   // Use Google Geocoding API or another service
   const address = `${location.Property}, ${location.Subcommunity}, ${location.Community}, ${location.City}`;
+  const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
   const response = await fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
       address
-    )}&key=AIzaSyCuKLKXrJxnrM24zucIuMx6VIcXzjWONM8`
+    )}&key=${apiKey}`
   );
   const data = await response.json();
 
