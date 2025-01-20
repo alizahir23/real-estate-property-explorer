@@ -11,7 +11,7 @@ import {
 } from "@/utils/cookie-utils";
 
 interface SearchFilterBarProps {
-  query?: string;
+  query: any;
 }
 
 const SearchFilterBar = ({ query }: SearchFilterBarProps) => {

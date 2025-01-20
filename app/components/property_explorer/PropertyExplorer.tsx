@@ -17,7 +17,7 @@ import { Edit } from "lucide-react";
 import PropertyManagementModal from "../PropertyManagementModal";
 
 interface PropertyExplorerProps {
-  query?: string;
+  query?: any;
 }
 
 type Poi = {
