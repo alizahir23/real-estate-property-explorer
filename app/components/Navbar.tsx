@@ -5,9 +5,6 @@ import Link from "next/link";
 import {
   faBars,
   faChevronDown,
-  faHamburger,
-  faRulerHorizontal,
-  faUser,
   faUserCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

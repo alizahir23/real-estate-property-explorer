@@ -1,6 +1,7 @@
 import React, { Key } from "react";
 import { MapPin, Clock, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface Property {
   id: Key;
@@ -153,10 +154,13 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
               className="flex items-center gap-4 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
               onClick={() => handlePropertySelect(property.Property)}
             >
-              <img
+              <Image
                 src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                 alt="Property"
-                className="w-10 h-10 object-cover rounded-lg"
+                className="h-10 w-10 object-cover rounded-lg"
+                height={36}
+                width={36}
+                unoptimized
               />
               <div>
                 <p className="text-gray-900 font-medium">{property.Property}</p>

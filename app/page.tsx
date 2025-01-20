@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Navbar from "./components/Navbar";
 import SearchFilterBar from "./components/SearchFilterBar";
 import PropertyExplorer from "./components/property_explorer/PropertyExplorer";

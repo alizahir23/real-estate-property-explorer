@@ -1,17 +1,9 @@
 import React, { forwardRef, Key } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsUpDown, faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faArrowsUpDown } from "@fortawesome/free-solid-svg-icons";
 import ListviewCard from "./ListviewCard";
 import { Property } from "@/types/property";
 import LoadingListviewCard from "./LoadingListViewCard";
-
-type LocationData = {
-  id: Key;
-  City: string;
-  Community: string;
-  Subcommunity: string;
-  Property: string;
-};
 
 const PropertyListView = forwardRef<
   HTMLDivElement,
