@@ -62,6 +62,11 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
     setIsDropdownOpen(false);
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    // Close the dropdown when the form is submitted
+    setIsDropdownOpen(false);
+  };
+
   return (
     <div className="w-full bg-[#f7f7f7] border-b border-gray-200 fixed top-[64px] z-[49]">
       <div className="max-w-7xl mx-auto">
@@ -69,6 +74,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
           <Form
             action="/"
             scroll={false}
+            onSubmit={handleSubmit}
             className="flex-1 relative md:max-w-[368px]"
           >
             <div ref={containerRef} className="relative">
@@ -100,7 +106,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
                   query={inputValue}
                   onSelect={handleSelect}
                   savedSearches={savedSearches}
-                  onRemoveSavedSearch={handleRemoveSearch} // Use the component's method
+                  onRemoveSavedSearch={handleRemoveSearch}
                 />
               )}
             </div>
