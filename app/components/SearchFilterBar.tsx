@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import Form from "next/form";
 import { faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchDropdown from "./SearchDropdown";
@@ -19,6 +18,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
   const [inputValue, setInputValue] = useState(query || "");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Use a state updater function to ensure we always have the most recent saved searches
   const [savedSearches, setSavedSearches] = useState(() => getSavedSearches());
@@ -62,18 +62,22 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
     setIsDropdownOpen(false);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent) => {
     // Close the dropdown when the form is submitted
     setIsDropdownOpen(false);
+
+    // Blur the input to remove focus
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
   };
 
   return (
     <div className="w-full bg-[#f7f7f7] border-b border-gray-200 fixed top-[64px] z-[49]">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-center p-4 gap-4 md:gap-8 md:justify-between">
-          <Form
+          <form
             action="/"
-            scroll={false}
             onSubmit={handleSubmit}
             className="flex-1 relative md:max-w-[368px]"
           >
@@ -83,6 +87,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
                 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500"
               />
               <input
+                ref={inputRef}
                 type="text"
                 name="query"
                 value={inputValue}
@@ -110,7 +115,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
                 />
               )}
             </div>
-          </Form>
+          </form>
           <div className="flex items-center gap-4">
             <button className="w-3/4 md:w-auto px-4 py-2 text-gray-700 bg-white hover:text-gray-900 font-medium rounded-md hover:bg-gray-100 transition-colors">
               All filters
