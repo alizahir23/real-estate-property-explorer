@@ -1,36 +1,99 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Real Estate Property Explorer
 
-## Getting Started
+## Project Overview
 
-First, run the development server:
+This is a web application for exploring real estate properties, featuring an interactive map and list view.
+
+## Key Features
+
+- Interactive property search across multiple dimensions (city, community, subcommunity)
+- Dual view mode: Map and List view of properties
+- Responsive design for desktop and mobile
+- Property management modal for adding/editing/deleting properties
+- Recent search tracking
+- Geocoding integration for mapping properties
+
+## Tech Stack
+
+- Next.js 14
+- React
+- TypeScript
+- Tailwind CSS
+- Google Maps API
+- FontAwesome Icons
+
+## Prerequisites
+
+- Node.js (v18 or later)
+- npm or yarn
+- Google Maps API Key
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
+```bash
+git clone https://your-github-repo-url.git
+cd real-estate-property-explorer
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install
+# or
+yarn install
+```
+
+### 3. Configure Environment Variables
+
+Create a `.env.local` file in the project root and add:
+
+```
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Design Choices and Considerations
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Search and Filtering
 
-## Learn More
+- Implemented a flexible search mechanism that supports multiple input formats
+- Geocoding integration to map properties dynamically
+- Limited to 50 search results due to API response time constraints
 
-To learn more about Next.js, take a look at the following resources:
+### Performance Optimization
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Used `useMemo` for filtering properties
+- Implemented loading states for better user experience
+- Marker clustering for map view to handle multiple properties
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Challenges and Future Improvements
 
-## Deploy on Vercel
+#### Current Limitation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The geocoding process is currently limited to 50 properties due to Google Maps API response time. This can result in some properties remaining unmapped.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+#### Proposed Solutions
+
+1. **Batch Processing**: Implement pagination or batch geocoding to handle larger property sets
+2. **Caching Mechanism**: Store geocoded results to reduce repeated API calls
+
+### Responsive Design
+
+- Mobile-friendly toggle between map and list views
+- Adaptive layout for different screen sizes
+- Consistent UI/UX across devices
+
+## Deployment
+
+Can be deployed on platforms like Vercel, Netlify, or traditional cloud providers supporting Next.js applications.
