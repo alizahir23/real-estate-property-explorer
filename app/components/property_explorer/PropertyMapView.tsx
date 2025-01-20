@@ -128,7 +128,7 @@ const PoiMarkers = ({
   onMarkerClick: (property: Property) => void;
 }) => {
   const map = useMap();
-  const [markers, setMarkers] = useState<{ [key: string]: Marker }>({});
+  const markers = {};
   const clusterer = useRef<MarkerClusterer | null>(null);
 
   // Initialize MarkerClusterer, if the map has changed
