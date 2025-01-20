@@ -62,7 +62,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
     setIsDropdownOpen(false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = () => {
     // Close the dropdown when the form is submitted
     setIsDropdownOpen(false);
   };
