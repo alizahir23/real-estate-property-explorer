@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsUpDown, faSpinner } from "@fortawesome/free-solid-svg-icons";
 import ListviewCard from "./ListviewCard";
 import { Property } from "@/types/property";
+import LoadingListviewCard from "./LoadingListViewCard";
 
 type LocationData = {
   id: Key;
@@ -62,14 +63,10 @@ const PropertyListView = forwardRef<
 
         {/* Loading State */}
         {isLoading && (
-          <div className="flex justify-center items-center h-full">
-            <div className="flex flex-col items-center">
-              <FontAwesomeIcon
-                icon={faSpinner}
-                className="h-8 w-8 text-gray-500 animate-spin"
-              />
-              <p className="mt-4 text-gray-600">Loading...</p>
-            </div>
+          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 overflow-clip">
+            {[...Array(3)].map((_, index) => (
+              <LoadingListviewCard key={index} />
+            ))}
           </div>
         )}
 
