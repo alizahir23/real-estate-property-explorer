@@ -1,7 +1,6 @@
 import { Metadata } from "next";
 import Navbar from "./components/Navbar";
 import PropertyExplorer from "./components/property_explorer/PropertyExplorer";
-import SearchFilterBar from "./components/SearchFilterBar";
 import { use } from "react";
 
 export const metadata: Metadata = {
