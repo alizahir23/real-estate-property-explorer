@@ -16,6 +16,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Edit } from "lucide-react";
 import PropertyManagementModal from "../PropertyManagementModal";
 
+const ITEMS_PER_PAGE = 25;
+
 interface PropertyExplorerProps {
   query?: string | undefined;
 }
@@ -27,51 +29,73 @@ type Poi = {
 };
 
 const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
-  // State to manage selected property across map and list view
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(
     null
   );
   const [isLoading, setIsLoading] = useState(true);
   const [isMapView, setIsMapView] = useState(true);
   const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false);
+  const [page, setPage] = useState(1);
 
-  // Ref for scrolling the list view
   const listViewRef = useRef<HTMLDivElement>(null);
+  const loadingRef = useRef<HTMLDivElement>(null);
 
-  const filteredProperties = useMemo(() => {
-    return propertyData
-      .filter((property) => {
-        if (!query) return true;
+  // Get all filtered properties before pagination
+  const allFilteredProperties = useMemo(() => {
+    return propertyData.filter((property) => {
+      if (!query) return true;
+      const searchTerm = query.toLowerCase();
 
-        const searchTerm = query.toLowerCase();
+      if (searchTerm.includes(",")) {
+        const city = searchTerm.split(",")[0].trim();
+        return property.City.toLowerCase() === city.toLowerCase();
+      }
 
-        // Handle different search formats
-        // 1. City, State, USA format
-        if (searchTerm.includes(",")) {
-          const city = searchTerm.split(",")[0].trim();
-          return property.City.toLowerCase() === city.toLowerCase();
-        }
+      if (property.Subcommunity?.toLowerCase().includes(searchTerm)) {
+        return true;
+      }
 
-        // 2. Full address search
-        if (property.Subcommunity?.toLowerCase().includes(searchTerm)) {
-          return true;
-        }
-
-        // 3. General search
-        return (
-          property.City.toLowerCase().includes(searchTerm) ||
-          property.Community?.toLowerCase().includes(searchTerm) ||
-          property.Subcommunity?.toLowerCase().includes(searchTerm) ||
-          property.Property?.toLowerCase().includes(searchTerm)
-        );
-      })
-      .slice(0, 50);
-    //  Serving only 50 search results due to slow geocoding search results.
-    //  Can be optimised using pagination.
+      return (
+        property.City.toLowerCase().includes(searchTerm) ||
+        property.Community?.toLowerCase().includes(searchTerm) ||
+        property.Subcommunity?.toLowerCase().includes(searchTerm) ||
+        property.Property?.toLowerCase().includes(searchTerm)
+      );
+    });
   }, [query]);
 
+  // Get paginated properties
+  const paginatedProperties = useMemo(() => {
+    return allFilteredProperties.slice(0, page * ITEMS_PER_PAGE);
+  }, [allFilteredProperties, page]);
+
+  const hasMore = allFilteredProperties.length > paginatedProperties.length;
+
+  // Reset pagination when search query changes
+  useEffect(() => {
+    setPage(1);
+  }, [query]);
+
+  // Setup intersection observer
+  useEffect(() => {
+    if (!loadingRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !isLoading) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(loadingRef.current);
+
+    return () => observer.disconnect();
+  }, [hasMore, isLoading]);
+
   const { mappedLocations, unmappedLocations } = useGeocodeLocations(
-    filteredProperties,
+    paginatedProperties,
     setIsLoading
   );
 
@@ -95,9 +119,9 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
   return (
     <div>
       <div className="md:flex hidden w-full h-[calc(100vh_-_88px)] justify-between mt-[88px] overflow-hidden">
-        <div className="w-[calc(35vw)]">
+        <div className="w-[calc(35vw)] flex flex-col">
           <PropertyListView
-            mappedProperties={filteredProperties.filter((p) =>
+            mappedProperties={paginatedProperties.filter((p) =>
               mappedLocations.some(
                 (l: { property: { id: Key } }) => l.property.id === p.id
               )
@@ -106,7 +130,9 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
             selectedProperty={selectedProperty}
             onPropertySelect={handleListPropertySelect}
             ref={listViewRef}
+            loadingRef={loadingRef}
             isLoading={isLoading}
+            hasMore={hasMore}
           />
         </div>
         <PropertyMapView
@@ -116,6 +142,7 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
           query={query}
         />
       </div>
+
       <div className="md:hidden block w-full h-[calc(100vh_-_88px)] mt-[88px] relative">
         {isMapView ? (
           <div className="h-full">
@@ -127,9 +154,9 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
             />
           </div>
         ) : (
-          <div className="h-full overflow-auto">
+          <div className="h-full">
             <PropertyListView
-              mappedProperties={filteredProperties.filter((p) =>
+              mappedProperties={paginatedProperties.filter((p) =>
                 mappedLocations.some(
                   (l: { property: { id: Key } }) => l.property.id === p.id
                 )
@@ -138,7 +165,9 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
               selectedProperty={selectedProperty}
               onPropertySelect={handleListPropertySelect}
               ref={listViewRef}
+              loadingRef={loadingRef}
               isLoading={isLoading}
+              hasMore={hasMore}
             />
           </div>
         )}
@@ -155,7 +184,7 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
           </button>
         </div>
       </div>
-      {/* Floating Edit Button */}
+
       <button
         onClick={() => setIsPropertyModalOpen(true)}
         className="fixed bottom-6 left-6 bg-blue-500 text-white p-3 rounded-full shadow-lg hover:bg-blue-600 z-40"
@@ -164,7 +193,6 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
         <Edit size={24} />
       </button>
 
-      {/* Property Management Modal */}
       <PropertyManagementModal
         isOpen={isPropertyModalOpen}
         onClose={() => setIsPropertyModalOpen(false)}
@@ -172,7 +200,6 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
     </div>
   );
 };
-
 const useGeocodeLocations = (
   locations: Property[],
   setIsLoading: {
@@ -236,5 +263,4 @@ const useGeocodeLocations = (
 
   return { mappedLocations, unmappedLocations };
 };
-
 export default PropertyExplorer;

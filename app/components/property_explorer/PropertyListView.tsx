@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, MutableRefObject } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTableCells, faList } from "@fortawesome/free-solid-svg-icons";
 import ListviewCard from "./ListviewCard";
@@ -7,16 +7,17 @@ import LoadingListviewCard from "./LoadingListViewCard";
 import CompactLoadingListviewCard from "./CompactLoadingListviewCard";
 import { Property } from "@/types/property";
 
-const PropertyListView = forwardRef<
-  HTMLDivElement,
-  {
-    mappedProperties: Property[];
-    unmappedProperties: Property[];
-    selectedProperty: Property | null;
-    onPropertySelect: (property: Property) => void;
-    isLoading?: boolean;
-  }
->(
+interface PropertyListViewProps {
+  mappedProperties: Property[];
+  unmappedProperties: Property[];
+  selectedProperty: Property | null;
+  onPropertySelect: (property: Property) => void;
+  isLoading?: boolean;
+  hasMore?: boolean;
+  loadingRef?: MutableRefObject<HTMLDivElement | null>;
+}
+
+const PropertyListView = forwardRef<HTMLDivElement, PropertyListViewProps>(
   (
     {
       mappedProperties,
@@ -24,16 +25,30 @@ const PropertyListView = forwardRef<
       selectedProperty,
       onPropertySelect,
       isLoading = false,
+      hasMore = false,
+      loadingRef,
     },
     ref
   ) => {
-    const [isCompactView, setIsCompactView] = useState(false);
+    const [isCompactView, setIsCompactView] = React.useState(false);
     const totalProperties = [...mappedProperties, ...unmappedProperties];
     const hasNoProperties = totalProperties.length === 0;
 
+    // Separate loading indicators for initial load and subsequent loads
+    const renderLoadingCards = () => (
+      <div className="flex flex-col gap-4">
+        {[...Array(3)].map((_, index) =>
+          isCompactView ? (
+            <CompactLoadingListviewCard key={index} />
+          ) : (
+            <LoadingListviewCard key={index} />
+          )
+        )}
+      </div>
+    );
+
     return (
       <div className="flex flex-col h-full">
-        {/* Fixed Header Section */}
         <div className="flex-none p-4 space-y-4">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold">
@@ -43,10 +58,16 @@ const PropertyListView = forwardRef<
 
           <div className="flex items-center justify-between">
             {totalProperties.length > 0 ? (
-              <span className="text-sm text-gray-500">
-                {totalProperties.length} result
-                {totalProperties.length > 1 ? "s" : ""}
-              </span>
+              <div>
+                <span className="text-sm text-gray-500">
+                  {totalProperties.length}
+                  {hasMore && "+"} result
+                  {totalProperties.length > 1 ? "s" : ""}
+                </span>
+                <span className="text-sm text-gray-500">
+                  {hasMore && ", scroll down for more!"}
+                </span>
+              </div>
             ) : (
               <div></div>
             )}
@@ -58,27 +79,17 @@ const PropertyListView = forwardRef<
                 <FontAwesomeIcon
                   icon={isCompactView ? faTableCells : faList}
                   className="w-4 h-4"
-                  color="#white"
+                  color="white"
                 />
               </button>
             </div>
           </div>
         </div>
 
-        {/* Scrollable Content Section */}
         <div ref={ref} className="flex-1 overflow-y-auto">
           <div className="p-4 space-y-4">
-            {isLoading && (
-              <div className="flex flex-col gap-4">
-                {[...Array(3)].map((_, index) =>
-                  isCompactView ? (
-                    <CompactLoadingListviewCard key={index} />
-                  ) : (
-                    <LoadingListviewCard key={index} />
-                  )
-                )}
-              </div>
-            )}
+            {/* Show loading cards for initial load */}
+            {isLoading && hasNoProperties && renderLoadingCards()}
 
             {!isLoading && hasNoProperties && (
               <div className="text-center py-8">
@@ -88,11 +99,12 @@ const PropertyListView = forwardRef<
               </div>
             )}
 
-            {!isLoading && !hasNoProperties && (
-              <div className="flex flex-col">
+            {!hasNoProperties && (
+              <div className="flex flex-col gap-4">
                 {mappedProperties.map((property) => (
                   <div
                     key={property.id}
+                    data-property-id={property.id}
                     onClick={() => onPropertySelect(property)}
                     className={`cursor-pointer rounded-lg ${
                       selectedProperty?.id === property.id ? "bg-[#121822]" : ""
@@ -122,6 +134,18 @@ const PropertyListView = forwardRef<
                         </p>
                       </div>
                     ))}
+                  </div>
+                )}
+
+                {/* Loading indicator for pagination scroll */}
+                {(isLoading || hasMore) && (
+                  <div
+                    ref={loadingRef}
+                    className="py-4 text-center text-gray-500"
+                  >
+                    {isLoading && totalProperties.length > 0
+                      ? renderLoadingCards()
+                      : hasMore && "Scroll for more"}
                   </div>
                 )}
               </div>

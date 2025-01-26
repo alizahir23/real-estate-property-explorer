@@ -25,7 +25,7 @@ interface SearchDropdownProps {
   onRemoveSavedSearch: (query: string) => void;
 }
 
-const RESULTS_LIMIT = 50;
+const RESULTS_LIMIT = 25;
 
 const SearchDropdown: React.FC<SearchDropdownProps> = ({
   properties,
