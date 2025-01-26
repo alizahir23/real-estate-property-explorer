@@ -4,7 +4,7 @@ const LoadingListviewCard = () => {
   return (
     <li className="group hover:cursor-pointer hover:bg-slate-100 rounded-md p-2 list-none animate-pulse">
       <div className=" rounded-lg overflow-hidden ">
-        <div className="object-cover w-full h-[calc(15vw-24px)] bg-[#2d4061]" />
+        <div className="object-cover w-full md:h-[calc(15vw-24px)] h-[25vh] bg-[#2d4061]" />
       </div>
 
       <div className="mt-2 space-y-1">

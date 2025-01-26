@@ -7,7 +7,7 @@ import { Property } from "@/types/property";
 const ListviewCard = ({ property }: { property: Property }) => {
   return (
     <li className="group hover:cursor-pointer hover:bg-[#10192a] rounded-md p-2 list-none my-1">
-      <div className=" w-full h-[calc(15vw-24px)] relative rounded-lg overflow-hidden ">
+      <div className=" w-full md:h-[calc(15vw-24px)] h-[25vh] relative rounded-lg overflow-hidden ">
         <Image
           src={
             "https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
@@ -16,7 +16,7 @@ const ListviewCard = ({ property }: { property: Property }) => {
           height={1}
           width={1}
           alt="property"
-          className="object-cover w-full h-[calc(15vw-24px)] bg-gray-200"
+          className="object-cover w-full md:h-[calc(15vw-24px)] h-[25vh] bg-gray-200"
         />
         <div className="absolute inset-0 flex justify-between ">
           <div className="bg-black/30 text-white m-2 px-2 py-1 rounded-md text-xs font-semibold self-start">
