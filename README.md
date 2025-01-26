@@ -95,3 +95,5 @@ The geocoding process is currently limited to 50 properties due to Google Maps A
 - Consistent UI/UX across devices
 
 ## Deployment
+
+Open [https://real-estate-property-explorer-pw2n.vercel.app/](https://real-estate-property-explorer-pw2n.vercel.app/) in your browser.
