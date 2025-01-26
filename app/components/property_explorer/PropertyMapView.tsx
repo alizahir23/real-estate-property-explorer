@@ -6,10 +6,12 @@ import {
   AdvancedMarker,
   useMap,
   Pin,
+  ColorScheme,
 } from "@vis.gl/react-google-maps";
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { Property } from "@/types/property";
 import PropertyPanel from "./PropertyPanel";
+import SearchFilterBar from "../SearchFilterBar";
 
 type Poi = {
   key: Key;
@@ -21,10 +23,12 @@ const PropertyMapView = ({
   mappedLocations,
   selectedProperty,
   onPropertySelect,
+  query,
 }: {
   mappedLocations: Poi[];
   selectedProperty: Property | null;
   onPropertySelect: (property: Property | null) => void;
+  query: string | undefined;
 }) => {
   const panelRef = useRef<HTMLDivElement>(null);
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -47,15 +51,19 @@ const PropertyMapView = ({
   }, [selectedProperty, panelRef, onPropertySelect]);
 
   return (
-    <div className="relative w-full h-[calc(100vh-138px)]">
+    <div className="relative w-full h-[calc(100vh-88px)]">
+      <SearchFilterBar query={String(query)} />
+
       <APIProvider
         apiKey={apiKey ?? ""}
         onLoad={() => console.log("Maps API has loaded.")}
       >
         <Map
           defaultZoom={10}
+          disableDefaultUI={true}
           mapId={"d6e2b2a6ed87d49c"}
           defaultCenter={{ lat: 25.2048, lng: 55.2708 }} // Dubai center
+          colorScheme={ColorScheme.DARK}
         >
           <MapController
             locations={mappedLocations}
@@ -163,13 +171,13 @@ const PoiMarkers = ({
           <Pin
             scale={selectedProperty?.id === poi.property.id ? 1 : 0.8}
             background={
-              selectedProperty?.id === poi.property.id ? "#fff" : "#000"
+              selectedProperty?.id === poi.property.id ? "#000" : "#fff"
             }
             glyphColor={
-              selectedProperty?.id === poi.property.id ? "#000" : "#fff"
+              selectedProperty?.id === poi.property.id ? "#fff" : "#000"
             }
             borderColor={
-              selectedProperty?.id === poi.property.id ? "#000" : "#fff"
+              selectedProperty?.id === poi.property.id ? "#fff" : "#000"
             }
           />
         </AdvancedMarker>

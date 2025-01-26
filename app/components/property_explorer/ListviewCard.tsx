@@ -6,17 +6,17 @@ import { Property } from "@/types/property";
 
 const ListviewCard = ({ property }: { property: Property }) => {
   return (
-    <li className="group hover:cursor-pointer hover:bg-slate-100 rounded-md p-2 list-none">
-      <div className="relative rounded-lg overflow-hidden ">
+    <li className="group hover:cursor-pointer hover:bg-[#10192a] rounded-md p-2 list-none my-1">
+      <div className=" w-full h-[calc(15vw-24px)] relative rounded-lg overflow-hidden ">
         <Image
           src={
             "https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
           }
           unoptimized
-          height={180}
-          width={360}
+          height={1}
+          width={1}
           alt="property"
-          className="object-cover w-full h-[180px]"
+          className="object-cover w-full h-[calc(15vw-24px)] bg-gray-200"
         />
         <div className="absolute inset-0 flex justify-between ">
           <div className="bg-black/30 text-white m-2 px-2 py-1 rounded-md text-xs font-semibold self-start">
@@ -29,12 +29,12 @@ const ListviewCard = ({ property }: { property: Property }) => {
       </div>
 
       <div className="mt-2 space-y-1">
-        <p className="text-xl font-semibold">{property.Property}</p>
-        <p className="text-gray-700">
-          {property.Community}, {property.Subcommunity}
+        <p className="text-xl font-semibold text-white">
+          {property.Property == "" ? "TBD" : property.Property}
         </p>
-        <p className="text-gray-600 text-sm">{property.City}</p>
-        <p className="text-gray-500 text-sm">MLS®: 25-484655</p>
+        <p className="text-gray-300">
+          {property.Community}, {property.Subcommunity}, {property.City}
+        </p>
       </div>
     </li>
   );

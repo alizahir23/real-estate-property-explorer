@@ -1,4 +1,4 @@
-import React, { Key } from "react";
+import React, { Key, useMemo } from "react";
 import { MapPin, Clock, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -25,6 +25,8 @@ interface SearchDropdownProps {
   onRemoveSavedSearch: (query: string) => void;
 }
 
+const RESULTS_LIMIT = 50;
+
 const SearchDropdown: React.FC<SearchDropdownProps> = ({
   properties,
   query,
@@ -34,35 +36,75 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
 }) => {
   const router = useRouter();
 
-  // Filter locations based on query
-  const getFilteredLocations = () => {
-    if (!query) return [];
-    const searchTerm = query.toLowerCase();
-    const uniqueLocations = new Set<string>();
+  // Calculate search scores and sort results
+  const getSearchScore = (item: string, searchTerm: string): number => {
+    const normalizedItem = item.toLowerCase();
+    const normalizedSearch = searchTerm.toLowerCase();
 
-    properties.forEach((property) => {
-      // Using just the city since we don't have state in the data
-      const cityLocation = `${property.City}`;
-      if (cityLocation.toLowerCase().includes(searchTerm)) {
-        uniqueLocations.add(cityLocation);
+    if (normalizedItem === normalizedSearch) return 100;
+    if (normalizedItem.startsWith(normalizedSearch)) return 80;
+    if (normalizedItem.includes(` ${normalizedSearch}`)) return 60;
+    if (normalizedItem.includes(normalizedSearch)) return 40;
+    return 0;
+  };
+
+  // Memoized filtered locations
+  const filteredLocations = useMemo(() => {
+    if (!query || query.length < 2) return [];
+    const searchTerm = query.toLowerCase();
+
+    // Use a Map to maintain uniqueness and store scores
+    const locationScores = new Map<string, number>();
+
+    for (const property of properties) {
+      const cityLocation = property.City;
+      const score = getSearchScore(cityLocation, searchTerm);
+
+      if (score > 0) {
+        // Keep the highest score if the location appears multiple times
+        const currentScore = locationScores.get(cityLocation) || 0;
+        locationScores.set(cityLocation, Math.max(score, currentScore));
       }
-    });
 
-    return Array.from(uniqueLocations);
-  };
+      // Early exit if we have enough high-scoring results
+      if (locationScores.size >= RESULTS_LIMIT) break;
+    }
 
-  // Filter properties based on query
-  const getFilteredProperties = () => {
-    if (!query) return [];
+    // Convert to array, sort by score, and take top results
+    return Array.from(locationScores.entries())
+      .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+      .slice(0, RESULTS_LIMIT)
+      .map(([location]) => location);
+  }, [properties, query]);
+
+  // Memoized filtered properties
+  const filteredProperties = useMemo(() => {
+    if (!query || query.length < 2) return [];
     const searchTerm = query.toLowerCase();
-    return properties.filter(
-      (property) =>
-        property.Property.toLowerCase().includes(searchTerm) ||
-        property.City.toLowerCase().includes(searchTerm) ||
-        property.Community.toLowerCase().includes(searchTerm) ||
-        property.Subcommunity.toLowerCase().includes(searchTerm)
-    );
-  };
+
+    const propertyScores: Array<{ property: Property; score: number }> = [];
+
+    for (const property of properties) {
+      const propertyScore = Math.max(
+        getSearchScore(property.Property, searchTerm),
+        getSearchScore(property.City, searchTerm),
+        getSearchScore(property.Community, searchTerm),
+        getSearchScore(property.Subcommunity, searchTerm)
+      );
+
+      if (propertyScore > 0) {
+        propertyScores.push({ property, score: propertyScore });
+      }
+
+      // Early exit if we have enough results
+      if (propertyScores.length >= RESULTS_LIMIT) break;
+    }
+
+    return propertyScores
+      .sort((a, b) => b.score - a.score)
+      .slice(0, RESULTS_LIMIT)
+      .map(({ property }) => property);
+  }, [properties, query]);
 
   const handleLocationSelect = (location: string) => {
     router.push(`/?query=${encodeURIComponent(location)}`);
@@ -79,7 +121,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     if (savedSearches.length === 0) return null;
 
     return (
-      <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden ">
+      <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
         <div className="p-4">
           <h3 className="text-sm font-medium text-gray-500 mb-4">
             Recent Searches
@@ -120,19 +162,20 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
     );
   }
 
-  // Get filtered results
-  const locations = getFilteredLocations();
-  const filteredProperties = getFilteredProperties();
+  // Return early if query is too short
+  if (query.length < 2) {
+    return null;
+  }
 
   // Show search results
   return (
-    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-scroll max-h-[calc(100vh_-_238px)]">
+    <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-y-scroll max-h-[calc(100vh_-_238px)]">
       <div className="p-4">
         <h3 className="text-lg text-gray-600 mb-4">Results</h3>
 
         {/* Locations */}
         <div className="space-y-4 mb-4">
-          {locations.map((location, index) => (
+          {filteredLocations.map((location, index) => (
             <div
               key={`location-${index}`}
               className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer"
@@ -170,7 +213,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
           ))}
         </div>
 
-        {locations.length === 0 && filteredProperties.length === 0 && (
+        {filteredLocations.length === 0 && filteredProperties.length === 0 && (
           <div className="text-center text-gray-500 py-4">No results found</div>
         )}
       </div>

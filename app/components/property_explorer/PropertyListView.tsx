@@ -1,9 +1,25 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowsUpDown } from "@fortawesome/free-solid-svg-icons";
+import {
+  faArrowsUpDown,
+  faTableCells,
+  faList,
+} from "@fortawesome/free-solid-svg-icons";
 import ListviewCard from "./ListviewCard";
-import { Property } from "@/types/property";
+import CompactListviewCard from "./CompactListViewCard";
 import LoadingListviewCard from "./LoadingListViewCard";
+import CompactLoadingListviewCard from "./CompactLoadingListviewCard";
+import { Property } from "@/types/property";
+
+interface PropertyListViewProps {
+  mappedProperties: Property[];
+  unmappedProperties: Property[];
+  selectedProperty: Property | null;
+  onPropertySelect: (property: Property) => void;
+  isLoading?: boolean;
+  selectedLocation?: string;
+  locationType?: "location" | "property" | null;
+}
 
 const PropertyListView = forwardRef<
   HTMLDivElement,
@@ -25,92 +41,102 @@ const PropertyListView = forwardRef<
     },
     ref
   ) => {
-    // Combine total properties
+    const [isCompactView, setIsCompactView] = useState(false);
     const totalProperties = [...mappedProperties, ...unmappedProperties];
-
-    // Check if there are no properties
     const hasNoProperties = totalProperties.length === 0;
+
     return (
-      <div
-        ref={ref}
-        className="w-full  h-[calc(100vh-128px)] px-4 pt-2 pb-4 overflow-y-auto"
-      >
-        <div className="mb-4">
-          <h3 className="text-xl font-semibold text-gray-900">
-            Real Estate & Homes for Sale
-          </h3>
-          <div className="flex justify-between items-center mt-1">
-            <p className="text-sm text-gray-600">
+      <div className="flex flex-col h-full">
+        {/* Fixed Header Section */}
+        <div className="flex-none p-4 space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">
+              Real Estate & Homes for Sale
+            </h2>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <span className="text-sm text-gray-500">
               {totalProperties.length} results
-            </p>
-            <div className="flex items-center gap-2 cursor-pointer hover:text-gray-900">
-              <p className="text-sm text-gray-600">Newest</p>
-              <FontAwesomeIcon
-                icon={faArrowsUpDown}
-                className="h-3 w-3 text-gray-600"
-              />
+            </span>
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setIsCompactView(!isCompactView)}
+                className="flex items-center gap-2 px-3 py-1 text-sm rounded-md bg-[#2d4061] hover:bg-gray-200"
+              >
+                <FontAwesomeIcon
+                  icon={isCompactView ? faTableCells : faList}
+                  className="w-4 h-4"
+                  color="#white"
+                />
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Loading State */}
-        {isLoading && (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 overflow-clip">
-            {[...Array(3)].map((_, index) => (
-              <LoadingListviewCard key={index} />
-            ))}
-          </div>
-        )}
-
-        {/* No Results State */}
-        {!isLoading && hasNoProperties && (
-          <div className="flex justify-center items-center h-full">
-            <p className="text-gray-600 text-center">
-              Uh oh, no results found. Try searching for something else
-            </p>
-          </div>
-        )}
-
-        {/* Properties List */}
-        {!isLoading && !hasNoProperties && (
-          <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            {/* Mapped Properties */}
-            {mappedProperties.map((property) => (
-              <div
-                key={property.id}
-                data-property-id={property.id}
-                onClick={() => onPropertySelect(property)}
-                className={`cursor-pointer rounded-lg ${
-                  selectedProperty?.id === property.id ? "bg-gray-200" : ""
-                }`}
-              >
-                <ListviewCard property={property} />
+        {/* Scrollable Content Section */}
+        <div ref={ref} className="flex-1 overflow-y-auto">
+          <div className="p-4 space-y-4">
+            {isLoading && (
+              <div className="flex flex-col gap-4">
+                {[...Array(3)].map((_, index) =>
+                  isCompactView ? (
+                    <CompactLoadingListviewCard key={index} />
+                  ) : (
+                    <LoadingListviewCard key={index} />
+                  )
+                )}
               </div>
-            ))}
-          </div>
-        )}
+            )}
 
-        {/* Unmapped Properties */}
-        {unmappedProperties.length > 0 && (
-          <div className="mt-8">
-            <h4 className="text-lg font-semibold text-gray-900">
-              Unmapped Properties
-            </h4>
-            {unmappedProperties.map((location, index) => (
-              <div
-                key={index}
-                className="cursor-pointer hover:bg-gray-100 rounded-lg p-4"
-              >
-                <p className="text-gray-900 font-medium">
-                  {location.Property || "Unnamed Property"}
-                </p>
-                <p className="text-gray-600 text-sm">
-                  {location.Subcommunity}, {location.Community}, {location.City}
+            {!isLoading && hasNoProperties && (
+              <div className="text-center py-8">
+                <p className="text-gray-500">
+                  Uh oh, no results found. Try searching for something else
                 </p>
               </div>
-            ))}
+            )}
+
+            {!isLoading && !hasNoProperties && (
+              <div className="flex flex-col">
+                {mappedProperties.map((property) => (
+                  <div
+                    key={property.id}
+                    onClick={() => onPropertySelect(property)}
+                    className={`cursor-pointer rounded-lg ${
+                      selectedProperty?.id === property.id ? "bg-[#121822]" : ""
+                    }`}
+                  >
+                    {isCompactView ? (
+                      <CompactListviewCard property={property} />
+                    ) : (
+                      <ListviewCard property={property} />
+                    )}
+                  </div>
+                ))}
+
+                {unmappedProperties.length > 0 && (
+                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold mb-2">
+                      Unmapped Properties
+                    </h3>
+                    {unmappedProperties.map((location, index) => (
+                      <div key={index} className="py-2">
+                        <p className="font-medium">
+                          {location.Property || "Unnamed Property"}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {location.Subcommunity}, {location.Community},{" "}
+                          {location.City}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     );
   }

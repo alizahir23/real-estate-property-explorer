@@ -12,6 +12,21 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      keyframes: {
+        "rotate-gradient": {
+          "0%, 100%": {
+            "background-size": "200% 200%",
+            "background-position": "left center",
+          },
+          "50%": {
+            "background-size": "200% 200%",
+            "background-position": "right center",
+          },
+        },
+      },
+      animation: {
+        "rotate-gradient": "rotate-gradient 5s ease infinite",
+      },
     },
   },
   plugins: [],

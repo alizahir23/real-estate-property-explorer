@@ -20,7 +20,6 @@ export default function Page({ searchParams }: Props) {
   return (
     <>
       <Navbar />
-      <SearchFilterBar query={String(query)} />
       <PropertyExplorer query={String(query)} />
     </>
   );

@@ -94,8 +94,8 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
 
   return (
     <div>
-      <div className="md:flex hidden w-100 h-[calc(100vh_-_138px)] justify-between mt-[138px] overflow-hidden">
-        <div className="max-w-[calc(40vw)]">
+      <div className="md:flex hidden w-full h-[calc(100vh_-_88px)] justify-between mt-[88px] overflow-hidden">
+        <div className="w-[calc(35vw)]">
           <PropertyListView
             mappedProperties={filteredProperties.filter((p) =>
               mappedLocations.some(
@@ -113,45 +113,47 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
           mappedLocations={mappedLocations}
           selectedProperty={selectedProperty}
           onPropertySelect={handleMapPropertySelect}
+          query={query}
         />
       </div>
-      <div className="md:hidden block w-100 h-[calc(100vh_-_138px)] mt-[138px]">
-        <div>
-          {isMapView ? (
-            <div>
-              <PropertyMapView
-                mappedLocations={mappedLocations}
-                selectedProperty={selectedProperty}
-                onPropertySelect={handleMapPropertySelect}
-              />
-            </div>
-          ) : (
-            <div className="w-100 ">
-              <PropertyListView
-                mappedProperties={filteredProperties.filter((p) =>
-                  mappedLocations.some(
-                    (l: { property: { id: Key } }) => l.property.id === p.id
-                  )
-                )}
-                unmappedProperties={unmappedLocations}
-                selectedProperty={selectedProperty}
-                onPropertySelect={handleListPropertySelect}
-                ref={listViewRef}
-                isLoading={isLoading}
-              />
-            </div>
-          )}
+      <div className="md:hidden block w-full h-[calc(100vh_-_88px)] mt-[88px] relative">
+        {isMapView ? (
+          <div className="h-full">
+            <PropertyMapView
+              mappedLocations={mappedLocations}
+              selectedProperty={selectedProperty}
+              onPropertySelect={handleMapPropertySelect}
+              query={query}
+            />
+          </div>
+        ) : (
+          <div className="h-full overflow-auto">
+            <PropertyListView
+              mappedProperties={filteredProperties.filter((p) =>
+                mappedLocations.some(
+                  (l: { property: { id: Key } }) => l.property.id === p.id
+                )
+              )}
+              unmappedProperties={unmappedLocations}
+              selectedProperty={selectedProperty}
+              onPropertySelect={handleListPropertySelect}
+              ref={listViewRef}
+              isLoading={isLoading}
+            />
+          </div>
+        )}
+        <div className="fixed bottom-4 left-0 w-full flex justify-center z-40">
+          <button
+            onClick={() => setIsMapView(!isMapView)}
+            className="w-[120px] py-2 bg-black text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors"
+          >
+            <FontAwesomeIcon
+              icon={!isMapView ? faMap : faList}
+              className="mr-2 h-5 w-5"
+            />
+            {isMapView ? "View List" : "View Map"}
+          </button>
         </div>
-        <button
-          onClick={() => setIsMapView(!isMapView)}
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 w-[120px] md:w-auto  py-2 bg-black text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors"
-        >
-          <FontAwesomeIcon
-            icon={!isMapView ? faMap : faList}
-            className="mr-2 h-5 w-5"
-          />{" "}
-          {isMapView ? "View List" : "View Map"}
-        </button>
       </div>
       {/* Floating Edit Button */}
       <button
