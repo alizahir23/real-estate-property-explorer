@@ -42,9 +42,14 @@ const PropertyListView = forwardRef<
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-500">
-              {totalProperties.length} results
-            </span>
+            {totalProperties.length > 0 ? (
+              <span className="text-sm text-gray-500">
+                {totalProperties.length} result
+                {totalProperties.length > 1 ? "s" : ""}
+              </span>
+            ) : (
+              <></>
+            )}
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setIsCompactView(!isCompactView)}

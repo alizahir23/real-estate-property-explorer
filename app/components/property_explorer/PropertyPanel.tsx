@@ -9,34 +9,56 @@ const PropertyPanel = forwardRef<HTMLDivElement, { property: Property }>(
     return (
       <div
         ref={ref}
-        className="translate-x-4 border-gray-300 border-opacity-50 w-128 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-4 bg-white shadow-lg rounded-md  overflow-auto"
+        className="translate-x-4 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-4 w-72 rounded-xl overflow-hidden"
+        style={{
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+        }}
       >
-        <div className="relative rounded-t-lg overflow-hidden ">
-          <Image
-            src={
-              "https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-            }
-            unoptimized
-            height={180}
-            width={360}
-            alt="property"
-            className="object-cover w-full h-[164px]"
-          />
-          <div className="absolute inset-0 flex justify-between ">
-            <div className="bg-black/30 text-white m-2 px-2 py-1 rounded-md text-xs font-semibold self-start">
-              Coming soon
+        <div className="bg-black/30 shadow-xl border border-white/10">
+          {/* Image Container */}
+          <div className="relative w-full h-48">
+            <Image
+              src="https://images.pexels.com/photos/186077/pexels-photo-186077.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+              alt={property.Property ?? "TBD"}
+              className="object-cover"
+              fill
+              unoptimized
+            />
+
+            {/* Top badges and buttons */}
+            <div className="absolute top-0 w-full p-3 flex justify-between items-start">
+              <div className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full">
+                <span className="text-white text-xs font-medium">OFF-PLAN</span>
+              </div>
+              <button className="bg-black/50 backdrop-blur-md p-2 rounded-full hover:bg-white/20 transition-colors">
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  className="h-4 w-4 text-white"
+                />
+              </button>
             </div>
-            <button className="self-start p-2 hover:bg-white/10 rounded-full transition-colors">
-              <FontAwesomeIcon icon={faHeart} className="h-5 w-5 text-white" />
+          </div>
+
+          {/* Content */}
+          <div className="p-4 bg-black/40">
+            <h3 className="text-white text-lg font-semibold mb-2">
+              {property.Property}
+            </h3>
+            <p className="text-gray-300 text-sm mb-3">
+              {property.Subcommunity}, {property.Community}
+            </p>
+
+            {/* Price */}
+            <div className="mb-4">
+              <span className="text-white text-xl font-bold">$5,300,000</span>
+            </div>
+
+            {/* View Button */}
+            <button className="w-full bg-white/10 hover:bg-white/20 text-white py-2 px-4 rounded-lg transition-colors backdrop-blur-sm font-medium">
+              VIEW
             </button>
           </div>
-        </div>
-        <div className="mt-2 space-y-1 pb-2 px-2">
-          <p className="text-l font-semibold">{property.Property}</p>
-          <p className="text-gray-700 text-sm">
-            {property.Subcommunity}, {property.Subcommunity}
-          </p>
-          <p className="text-gray-600 text-sm">{property.City}</p>
         </div>
       </div>
     );
