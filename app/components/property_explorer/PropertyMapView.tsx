@@ -135,7 +135,7 @@ const PoiMarkers = ({
   onMarkerClick: (property: Property) => void;
 }) => {
   const map = useMap();
-  const markers = {};
+
   const clusterer = useRef<MarkerClusterer | null>(null);
 
   // Initialize MarkerClusterer, if the map has changed
@@ -145,12 +145,6 @@ const PoiMarkers = ({
       clusterer.current = new MarkerClusterer({ map });
     }
   }, [map]);
-
-  // Update markers, if the markers array has changed
-  useEffect(() => {
-    clusterer.current?.clearMarkers();
-    clusterer.current?.addMarkers(Object.values(markers));
-  }, [markers]);
 
   const handleClick = (ev: google.maps.MapMouseEvent, poi: Poi) => {
     if (!map) return;

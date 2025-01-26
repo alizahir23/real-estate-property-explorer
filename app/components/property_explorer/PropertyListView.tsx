@@ -1,25 +1,11 @@
 import React, { forwardRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowsUpDown,
-  faTableCells,
-  faList,
-} from "@fortawesome/free-solid-svg-icons";
+import { faTableCells, faList } from "@fortawesome/free-solid-svg-icons";
 import ListviewCard from "./ListviewCard";
 import CompactListviewCard from "./CompactListViewCard";
 import LoadingListviewCard from "./LoadingListViewCard";
 import CompactLoadingListviewCard from "./CompactLoadingListviewCard";
 import { Property } from "@/types/property";
-
-interface PropertyListViewProps {
-  mappedProperties: Property[];
-  unmappedProperties: Property[];
-  selectedProperty: Property | null;
-  onPropertySelect: (property: Property) => void;
-  isLoading?: boolean;
-  selectedLocation?: string;
-  locationType?: "location" | "property" | null;
-}
 
 const PropertyListView = forwardRef<
   HTMLDivElement,

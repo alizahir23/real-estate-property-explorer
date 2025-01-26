@@ -68,7 +68,7 @@ const PropertyExplorer: React.FC<PropertyExplorerProps> = ({ query }) => {
       .slice(0, 50);
     //  Serving only 50 search results due to slow geocoding search results.
     //  Can be optimised using pagination.
-  }, [query, propertyData]);
+  }, [query]);
 
   const { mappedLocations, unmappedLocations } = useGeocodeLocations(
     filteredProperties,
@@ -232,7 +232,7 @@ const useGeocodeLocations = (
     };
 
     geocodeLocations();
-  }, [locations]);
+  }, [locations, apiKey, setIsLoading]);
 
   return { mappedLocations, unmappedLocations };
 };

@@ -1,8 +1,6 @@
 // CompactListviewCard.tsx
 import React from "react";
 import Image from "next/image";
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Property } from "@/types/property";
 
 const CompactListviewCard = ({ property }: { property: Property }) => {
