@@ -71,21 +71,21 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Geocoding integration to map properties dynamically
 - Limited to 50 search results due to API response time constraints
 
-### Performance Optimization
+### Unfinished Features
 
-- Used `useMemo` for filtering properties
-- Implemented loading states for better user experience
-- Marker clustering for map view to handle multiple properties
+- Sorting property lists alphabetically, chronologically etc
+- "All Filters" button is currently non functional since there were'nt many features to filter with
+- Navbar elements are non functional
 
 ### Challenges and Future Improvements
 
 #### Current Limitation
 
-The geocoding process is currently limited to 50 properties due to Google Maps API response time. This can result in some properties remaining unmapped.
+The geocoding process is currently limited to 50 properties due to Google Maps API response time. The editing screen is also very slugish at this point since its loading over 9,000+ records. 
 
 #### Proposed Solutions
 
-1. **Batch Processing**: Implement pagination or batch geocoding to handle larger property sets
+1. **Batch Processing**: Implement pagination or batch geocoding and loading to handle larger property sets
 2. **Caching Mechanism**: Store geocoded results to reduce repeated API calls
 
 ### Responsive Design
@@ -93,6 +93,7 @@ The geocoding process is currently limited to 50 properties due to Google Maps A
 - Mobile-friendly toggle between map and list views
 - Adaptive layout for different screen sizes
 - Consistent UI/UX across devices
+- Responsiveness of loading state of the sidebar can be improved 
 
 ## Deployment
 
