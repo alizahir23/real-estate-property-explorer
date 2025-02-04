@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faXmark, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import SearchDropdown from "./SearchDropdown";
 import propertyData from "@/public/properties.json";
@@ -20,6 +20,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
   const [showSaveButton, setShowSaveButton] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -45,17 +46,36 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
     if (inputValue) {
       setShowSaveButton(true);
       setIsSearching(true);
+
+      // Check if the current search is already saved
+      const isAlreadySaved = savedSearches.some(
+        (search) => search.query === inputValue
+      );
+      setIsSaved(isAlreadySaved);
     } else {
       setShowSaveButton(false);
       setIsSearching(false);
+      setIsSaved(false);
     }
-  }, [inputValue]);
+  }, [inputValue, savedSearches]);
 
   const handleSaveSearch = () => {
     if (!inputValue) return;
+
+    // Check if search is already saved
+    const isAlreadySaved = savedSearches.some(
+      (search) => search.query === inputValue
+    );
+
+    if (isAlreadySaved) {
+      return;
+    }
+
     const isLocationSearch = inputValue.includes(",");
     saveSearch(inputValue, isLocationSearch ? "location" : "property");
+
     setSavedSearches(getSavedSearches());
+    setIsSaved(true);
   };
 
   const handleRemoveSearch = (query: string) => {
@@ -140,9 +160,21 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
                     <button
                       type="button"
                       onClick={handleSaveSearch}
-                      className="px-3 py-1.5 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all duration-300 ease-in-out opacity-100 transform scale-100"
+                      className={`px-3 py-1.5 text-sm font-medium rounded-full hover:opacity-90 transition-all duration-300 ease-in-out ${
+                        isSaved
+                          ? "bg-blue-500 text-white cursor-default"
+                          : "bg-black text-white hover:bg-gray-800"
+                      }`}
+                      disabled={isSaved}
                     >
-                      Save
+                      {isSaved ? (
+                        <>
+                          <FontAwesomeIcon icon={faCheck} className="mr-2" />
+                          Saved
+                        </>
+                      ) : (
+                        "Save"
+                      )}
                     </button>
                   )}
                 </div>
