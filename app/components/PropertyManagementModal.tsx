@@ -145,7 +145,7 @@ const PropertyManagementModal: React.FC<PropertyManagementModalProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="bg-white rounded-lg p-6 w-11/12 max-w-4xl max-h-[90vh] overflow-auto">
+      <div className="bg-white text-black rounded-lg p-6 w-11/12 max-w-4xl max-h-[90vh] overflow-auto">
         {/* Error Handling */}
         {error && (
           <div

@@ -19,8 +19,8 @@ const ListviewCard = ({ property }: { property: Property }) => {
           className="object-cover w-full md:h-[calc(15vw-24px)] h-[25vh] bg-gray-200"
         />
         <div className="absolute inset-0 flex justify-between ">
-          <div className="bg-black/30 text-white m-2 px-2 py-1 rounded-md text-xs font-semibold self-start">
-            Coming soon
+          <div className="bg-black/30 text-white m-2 px-2 py-1 rounded-md text-s font-semibold self-start">
+            ${property.price.toLocaleString()}
           </div>
           <button className="self-start p-2 hover:bg-white/10 rounded-full transition-colors">
             <FontAwesomeIcon icon={faHeart} className="h-5 w-5 text-white" />

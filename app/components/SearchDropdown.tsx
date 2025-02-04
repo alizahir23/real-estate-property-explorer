@@ -124,7 +124,7 @@ const SearchDropdown: React.FC<SearchDropdownProps> = ({
       <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
         <div className="p-4">
           <h3 className="text-sm font-medium text-gray-500 mb-4">
-            Recent Searches
+            Saved Searches
           </h3>
           <div className="space-y-3">
             {savedSearches.map((search, index) => (

@@ -6,4 +6,5 @@ export interface Property {
   Community?: string;
   Subcommunity?: string;
   Property?: string;
+  price: number;
 }
