@@ -111,12 +111,12 @@ const PropertyListView = forwardRef<HTMLDivElement, PropertyListViewProps>(
               <div className="relative">
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-[#2d4061] hover:bg-[#3d5070] text-white transition-colors duration-200"
+                  className="flex items-center gap-2 px-2 py-1.5 text-xs rounded-md bg-[#2d4061] hover:bg-[#3d5070] text-white transition-colors duration-200"
                 >
                   <span>{selectedSort.label}</span>
                   <FontAwesomeIcon
                     icon={faChevronDown}
-                    className={`w-3 h-3 transition-transform duration-200 ${
+                    className={`w-2 h-2 transition-transform duration-200 ${
                       isDropdownOpen ? "rotate-180" : ""
                     }`}
                   />

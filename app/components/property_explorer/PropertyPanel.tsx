@@ -29,9 +29,11 @@ const PropertyPanel = forwardRef<HTMLDivElement, { property: Property }>(
             {/* Top badges and buttons */}
             <div className="absolute top-0 w-full p-3 flex justify-between items-start">
               <div className="bg-black/50 backdrop-blur-md px-3 py-1 rounded-full">
-                <span className="text-white text-xs font-medium">OFF-PLAN</span>
+                <span className="text-white text-xs font-medium">
+                  {property.City}
+                </span>
               </div>
-              <button className="bg-black/50 backdrop-blur-md p-2 rounded-full hover:bg-white/20 transition-colors">
+              <button className="bg-black/50 backdrop-blur-md px-2 py-1 rounded-full hover:bg-white/20 transition-colors">
                 <FontAwesomeIcon
                   icon={faHeart}
                   className="h-4 w-4 text-white"
@@ -42,16 +44,18 @@ const PropertyPanel = forwardRef<HTMLDivElement, { property: Property }>(
 
           {/* Content */}
           <div className="p-4 bg-black/40">
-            <h3 className="text-white text-lg font-semibold mb-2">
+            <h3 className="text-white text-lg font-semibold">
               {property.Property}
             </h3>
-            <p className="text-gray-300 text-sm mb-3">
+            <p className="text-gray-300 text-sm">
               {property.Subcommunity}, {property.Community}
             </p>
 
             {/* Price */}
-            <div className="mb-4">
-              <span className="text-white text-xl font-bold">$5,300,000</span>
+            <div className="my-4">
+              <span className="text-white text-xl font-bold">
+                ${property.price.toLocaleString()}
+              </span>
             </div>
 
             {/* View Button */}
