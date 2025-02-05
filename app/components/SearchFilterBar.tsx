@@ -121,7 +121,7 @@ const SearchFilterBar = ({ query }: SearchFilterBarProps) => {
               <div
                 className={`absolute inset-0 rounded-full ${
                   isSearching
-                    ? "before:absolute before:inset-[-2px] before:rounded-full before:bg-gradient-to-r before:from-blue-500 before:via-purple-500 before:to-pink-500 before:animate-rotate-gradient before:blur-sm"
+                    ? "before:absolute before:inset-[-2px] before:rounded-full before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-pink-700 before:animate-rotate-gradient before:blur-sm"
                     : ""
                 }`}
               >
